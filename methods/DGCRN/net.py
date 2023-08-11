@@ -129,7 +129,7 @@ class DGCRN(nn.Module):
         nodevec2 = self.emb2(self.idx)
 
         hyper_input = torch.cat(
-            (x, Hidden_State.view(-1, self.num_nodes, self.hidden_size)), 2)
+            (x, Hidden_State.view(-1, self.num_nodes, self.hidden_size).to(self.device)), 2)
 
         if type == 'encoder':
 
@@ -160,7 +160,7 @@ class DGCRN(nn.Module):
         adp = self.preprocessing(adj, predefined_A[0])
         adpT = self.preprocessing(adj.transpose(1, 2), predefined_A[1])
 
-        Hidden_State = Hidden_State.view(-1, self.num_nodes, self.hidden_size)
+        Hidden_State = Hidden_State.view(-1, self.num_nodes, self.hidden_size).to(self.device)
         Cell_State = Cell_State.view(-1, self.num_nodes, self.hidden_size)
 
         combined = torch.cat((x, Hidden_State), -1)

@@ -21,9 +21,31 @@ def str_to_bool(value):
         return True
     raise ValueError(f'{value} is not a valid boolean value')
 
+def extract_test_index(results_pred, results_real, data_name = 'Hague'):
+    if data_name == 'Hague':
+        sensor_index = [32,41,44,19]
+    elif data_name == 'PEMS-BAY':
+        sensor_index = [256, 65, 15, 66, 269]
+    else:
+        sensor_index = [12, 80, 33, 5, 162]
+
+    # convert tensor to numpy
+    GNN_real = []
+    GNN_pred = []
+    for i in range(len(results_real)):
+        for j in sensor_index:
+            GNN_real.append(results_real[i][j])
+            GNN_pred.append(results_pred[i][j])
+
+    GNN_real = torch.tensor(GNN_real)
+    GNN_pred = torch.tensor(GNN_pred)
+
+    return GNN_pred, GNN_real
+
+
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--runs', type=int, default=10, help='number of runs')
+parser.add_argument('--runs', type=int, default=1, help='number of runs')
 parser.add_argument('--LOAD_INITIAL',
                     default=False,
                     type=str_to_bool,
@@ -35,10 +57,10 @@ parser.add_argument('--TEST_ONLY',
 
 parser.add_argument('--tolerance',
                     type=int,
-                    default=100,
+                    default=10,
                     help='tolerance for earlystopping')
 parser.add_argument('--OUTPUT_PREDICTION',
-                    default=False,
+                    default=True,
                     type=str_to_bool,
                     help='If OUTPUT_PREDICTION.')
 
@@ -56,15 +78,15 @@ parser.add_argument('--hyperGNN_dim',
                     type=int,
                     help='hyperGNN_dim.')
 
-parser.add_argument('--device', type=str, default='cuda:1', help='')
+parser.add_argument('--device', type=str, default='mps:0', help='')
 parser.add_argument('--data',
                     type=str,
-                    default='data/METR-LA',
+                    default='data/Hague',
                     help='data path')
 
 parser.add_argument('--adj_data',
                     type=str,
-                    default='data/sensor_graph/adj_mx.pkl',
+                    default='data/sensor_graph/adj_mx_hague.pkl',
                     help='adj data path')
 parser.add_argument('--propalpha', type=float, default=0.05, help='prop alpha')
 
@@ -79,7 +101,7 @@ parser.add_argument('--gcn_depth',
                     help='graph convolution depth')
 parser.add_argument('--num_nodes',
                     type=int,
-                    default=207,
+                    default=48,
                     help='number of nodes/variables')
 parser.add_argument('--dropout', type=float, default=0.3, help='dropout rate')
 parser.add_argument('--subgraph_size', type=int, default=20, help='k')
@@ -110,11 +132,13 @@ parser.add_argument('--weight_decay',
 parser.add_argument('--clip', type=int, default=5, help='clip')
 parser.add_argument('--step_size1', type=int, default=2500, help='step_size')
 
-parser.add_argument('--epochs', type=int, default=100, help='')
-parser.add_argument('--print_every', type=int, default=50, help='')
+parser.add_argument('--epochs', type=int, default=10, help='')
+parser.add_argument('--print_every', type=int, default=3, help='')
 parser.add_argument('--save', type=str, default='./save/', help='save path')
 
 parser.add_argument('--expid', type=str, default='1', help='experiment id')
+parser.add_argument('--data_name', type=str, default='PEMS-BAY', help='name of the dataset')
+
 
 args = parser.parse_args()
 torch.set_num_threads(3)
@@ -201,16 +225,30 @@ def main(runid):
         mae = []
         mape = []
         rmse = []
-        for i in [2, 5, 8, 11]:
+        for i in [0]:
             pred = scaler.inverse_transform(yhat[:, :, i])
             real = realy[:, :, i]
+            # GNN_pred, GNN_real  = extract_test_index(pred, real,args.data_name)
             metrics = metric(pred, real)
             log = 'Evaluate best model on test data for horizon {:d}, Test MAE: {:.4f}, Test MAPE: {:.4f}, Test RMSE: {:.4f}'
             print(log.format(i + 1, metrics[0], metrics[1], metrics[2]))
             mae.append(metrics[0])
             mape.append(metrics[1])
             rmse.append(metrics[2])
+
+
+
+        # save pred and real valiues in pickle file
+        all_pred_save_path = args.save + 'result_pred/' + "exp" + str(args.expid) + "_" + str(runid)+ "_" +args.data_name + "_pred_all.pkl"
+        with open(all_pred_save_path, 'wb') as f:
+            pickle.dump(pred, f)
+
+        all_pred_save_path = args.save + 'result_pred/' + "exp" + str(args.expid) + "_" + str(runid)+ "_" +args.data_name +"_real_all.pkl"
+        with open(all_pred_save_path, 'wb') as f:
+            pickle.dump(real, f)
+
         return mae, mape, rmse, mae, mape, rmse
+
 
     else:
         print("start training...", flush=True)
@@ -337,6 +375,7 @@ def main(runid):
         realy = torch.Tensor(dataloader['y_test']).to(device)
         realy = realy.transpose(1, 3)[:, 0, :, :]
 
+        ttime_start = time.time()
         for iter, (x,
                    y) in enumerate(dataloader['test_loader'].get_iterator()):
             testx = torch.Tensor(x).to(device)
@@ -354,15 +393,39 @@ def main(runid):
         mae = []
         mape = []
         rmse = []
-        for i in [2, 5, 8, 11]:
+        # for i in [2, 5, 8, 11]:
+        #     pred = scaler.inverse_transform(yhat[:, :, i])
+        #     real = realy[:, :, i]
+        #     metrics = metric(pred, real)
+        #     log = 'Evaluate best model on test data for horizon {:d}, Test MAE: {:.4f}, Test MAPE: {:.4f}, Test RMSE: {:.4f}'
+        #     print(log.format(i + 1, metrics[0], metrics[1], metrics[2]))
+        #     mae.append(metrics[0])
+        #     mape.append(metrics[1])
+        #     rmse.append(metrics[2])
+
+        for i in [0]:
             pred = scaler.inverse_transform(yhat[:, :, i])
             real = realy[:, :, i]
+            # GNN_pred, GNN_real  = extract_test_index(pred, real, args.data_name)
             metrics = metric(pred, real)
             log = 'Evaluate best model on test data for horizon {:d}, Test MAE: {:.4f}, Test MAPE: {:.4f}, Test RMSE: {:.4f}'
             print(log.format(i + 1, metrics[0], metrics[1], metrics[2]))
             mae.append(metrics[0])
             mape.append(metrics[1])
             rmse.append(metrics[2])
+
+        # save pred and real valiues in pickle file
+        all_pred_save_path = args.save + 'result_pred/' + "exp" + str(args.expid) + "_" + str(runid)+ "_" +args.data_name + "_pred_all.pkl"
+        with open(all_pred_save_path, 'wb') as f:
+            pickle.dump(pred, f)
+
+        all_pred_save_path = args.save + 'result_pred/' + "exp" + str(args.expid) + "_" + str(runid)+ "_" + args.data_name +"_real_all.pkl"
+        with open(all_pred_save_path, 'wb') as f:
+            pickle.dump(real, f)
+
+        ttime_end = time.time() - ttime_start
+        print("Average Testing Time: {:.4f} secs".format(ttime_end))
+
         return vmae, vmape, vrmse, mae, mape, rmse
 
 
@@ -374,6 +437,8 @@ if __name__ == "__main__":
     mae = []
     mape = []
     rmse = []
+
+    train_time_start = time.time()
     for i in range(args.runs):
         if args.TEST_ONLY:
             vm1, vm2, vm3, m1, m2, m3 = main(i)
@@ -407,11 +472,14 @@ if __name__ == "__main__":
     print(log.format(np.std(vmae), np.std(vrmse), np.std(vmape)))
     print('\n\n')
 
-    print(
-        'test|horizon\tMAE-mean\tRMSE-mean\tMAPE-mean\tMAE-std\tRMSE-std\tMAPE-std'
-    )
-    for i in range(4):
-        log = '{:d}\t{:.4f}\t{:.4f}\t{:.4f}\t{:.4f}\t{:.4f}\t{:.4f}'
-        print(
-            log.format([3, 6, 9, 12][i], amae[i], armse[i], amape[i], smae[i],
-                       srmse[i], smape[i]))
+    train_time = time.time() - train_time_start
+    print("Total Training Time: {:.4f} secs".format(train_time))
+
+    # print(
+    #     'test|horizon\tMAE-mean\tRMSE-mean\tMAPE-mean\tMAE-std\tRMSE-std\tMAPE-std'
+    # )
+    # for i in range(4):
+    #     log = '{:d}\t{:.4f}\t{:.4f}\t{:.4f}\t{:.4f}\t{:.4f}\t{:.4f}'
+    #     print(
+    #         log.format([3, 6, 9, 12][i], amae[i], armse[i], amape[i], smae[i],
+    #                    srmse[i], smape[i]))

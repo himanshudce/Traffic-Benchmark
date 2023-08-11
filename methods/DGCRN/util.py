@@ -281,6 +281,7 @@ def load_dataset(dataset_dir,
         data['y_' + category] = cat_data['y']
     scaler = StandardScaler(mean=data['x_train'][..., 0].mean(),
                             std=data['x_train'][..., 0].std())
+    
 
     for category in ['train', 'val', 'test']:
         data['x_' + category][...,
