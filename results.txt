@@ -1,0 +1,217 @@
+# The file comprising the results from generated log files of the experiments conducted on the DGCRN model.
+
+METR-LA DATASET 
+
+
+Namespace(runs=1, LOAD_INITIAL=False, TEST_ONLY=False, tolerance=5, OUTPUT_PREDICTION=True, cl_decay_steps=2000, new_training_method=False, rnn_size=64, hyperGNN_dim=16, device='mps:0', data='data/METR-LA', adj_data='data/sensor_graph/adj_mx.pkl', propalpha=0.05, cl=True, gcn_depth=2, num_nodes=207, dropout=0.3, subgraph_size=20, node_dim=40, in_dim=2, seq_in_len=12, seq_out_len=12, layers=3, batch_size=64, tanhalpha=3, learning_rate=0.001, weight_decay=0.0001, clip=5, step_size1=2500, epochs=15, print_every=5, save='./save/', expid='2')
+Number of model parameters is 199441
+start training...
+/opt/homebrew/anaconda3/envs/benchmark/lib/python3.9/site-packages/torch/autograd/__init__.py:200: UserWarning: The operator 'aten::sgn.out' is not currently supported on the MPS backend and will fall back to run on the CPU. This may have performance implications. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/aten/src/ATen/mps/MPSFallback.mm:11.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+Epoch: 001, Inference Time: 147.5689 secs
+Epoch: 001, Train Loss: 2.7803, Train MAPE: 0.0675, Train RMSE: 4.8412, Valid Loss: 6.5121, Valid MAPE: 0.1874, Valid RMSE: 9.2333, Training Time: 1036.0544/epoch
+Epoch: 006, Inference Time: 159.3844 secs
+Epoch: 006, Train Loss: 2.2711, Train MAPE: 0.0529, Train RMSE: 4.0681, Valid Loss: 5.6427, Valid MAPE: 0.1730, Valid RMSE: 8.9812, Training Time: 1606.8054/epoch
+Epoch: 011, Inference Time: 151.4237 secs
+Epoch: 011, Train Loss: 2.2326, Train MAPE: 0.0522, Train RMSE: 3.8878, Valid Loss: 5.0481, Valid MAPE: 0.1456, Valid RMSE: 8.1176, Training Time: 1651.6978/epoch
+Average Training Time: 1609.5149 secs/epoch
+Average Inference Time: 155.4571 secs
+Training finished
+The valid loss on best model is 5.0431, epoch:7
+Evaluate best model on test data for horizon 1, Test MAE: 2.4379, Test MAPE: 0.0622, Test RMSE: 4.1613
+Average Testing Time: 318.1148 secs
+
+
+Results for 1 runs
+
+
+valid   MAE     RMSE    MAPE
+mean:   5.1426  9.2331  0.1554
+std:    0.0000  0.0000  0.0000
+
+
+
+Total Training Time: 11263.234 secs
+
+
+
+
+———————————	——————	——————	
+
+
+Hague Dataset
+—————————
+
+
+———
+
+
+(benchmark) himanshu@himanshus-MacBook-Air Traffic-Benchmark % python3 ./methods/DGCRN/train.py --adj_data ./data/sensor_graph/adj_mat_hague_N_T2.pkl --data ./data/hague_N_T1 --num_nodes 15 --runs 1  --epochs 15 --print_every 5 --batch_size 64 --tolerance 2  --cl_decay_steps 4000 --expid DGCRN_hague --device mps:0 
+Namespace(runs=1, LOAD_INITIAL=False, TEST_ONLY=False, tolerance=2, OUTPUT_PREDICTION=True, cl_decay_steps=4000.0, new_training_method=False, rnn_size=64, hyperGNN_dim=16, device='mps:0', data='./data/hague_N_T1', adj_data='./data/sensor_graph/adj_mat_hague_N_T1.pkl', propalpha=0.05, cl=True, gcn_depth=2, num_nodes=15, dropout=0.3, subgraph_size=20, node_dim=40, in_dim=2, seq_in_len=12, seq_out_len=12, layers=3, batch_size=64, tanhalpha=3, learning_rate=0.001, weight_decay=0.0001, clip=5, step_size1=2500, epochs=15, print_every=5, save='./save/', expid='DGCRN_hague', data_name='Hague')
+Number of model parameters is 184081
+start training...
+/opt/homebrew/anaconda3/envs/benchmark/lib/python3.9/site-packages/torch/autograd/__init__.py:200: UserWarning: The operator 'aten::sgn.out' is not currently supported on the MPS backend and will fall back to run on the CPU. This may have performance implications. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/aten/src/ATen/mps/MPSFallback.mm:11.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+Epoch: 006, Inference Time: 137.5469 secs
+Epoch: 006, Train Loss: 9.9908, Train MAPE: 0.8505, Train RMSE: 14.6622, Valid Loss: 14.1381, Valid MAPE: 2.3063, Valid RMSE: 18.8406, Training Time: 1393.2570/epoch
+Average Training Time: 1393.2570 secs/epoch
+Average Inference Time: 137.5469 secs
+Training finished
+The valid loss on best model is 14.1381, epoch:9
+Evaluate best model on test data for horizon 1, Test MAE: 7.8481, Test MAPE: 0.4093, Test RMSE: 12.1454
+Average Testing Time: 274.6893 secs
+
+
+Results for 1 runs
+
+
+valid   MAE     RMSE    MAPE
+mean:   14.1603 19.5520 2.2074
+std:    0.0000  0.0000  0.0000
+
+
+Total Training Time: 17890.76 secs
+
+———
+
+
+
+
+
+
+(benchmark) himanshu@himanshus-MacBook-Air Traffic-Benchmark % python3 ./methods/DGCRN/train.py --adj_data ./data/sensor_graph/adj_mat_hague_N_T2.pkl --data ./data/Hague_N_T2 --num_nodes 15 --runs 1  --epochs 15 --print_every 5 --batch_size 64 --tolerance 2  --cl_decay_steps 4000 --expid DGCRN_hague --device mps:0 
+Namespace(runs=1, LOAD_INITIAL=False, TEST_ONLY=False, tolerance=2, OUTPUT_PREDICTION=True, cl_decay_steps=4000.0, new_training_method=False, rnn_size=64, hyperGNN_dim=16, device='mps:0', data='./data/Hague_N_T2', adj_data='./data/sensor_graph/adj_mat_hague_N_T2.pkl', propalpha=0.05, cl=True, gcn_depth=2, num_nodes=15, dropout=0.3, subgraph_size=20, node_dim=40, in_dim=2, seq_in_len=12, seq_out_len=12, layers=3, batch_size=64, tanhalpha=3, learning_rate=0.001, weight_decay=0.0001, clip=5, step_size1=2500, epochs=15, print_every=5, save='./save/', expid='DGCRN_hague', data_name='Hague')
+Number of model parameters is 184081
+start training...
+/opt/homebrew/anaconda3/envs/benchmark/lib/python3.9/site-packages/torch/autograd/__init__.py:200: UserWarning: The operator 'aten::sgn.out' is not currently supported on the MPS backend and will fall back to run on the CPU. This may have performance implications. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/aten/src/ATen/mps/MPSFallback.mm:11.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+Epoch: 006, Inference Time: 137.5469 secs
+Epoch: 006, Train Loss: 9.9908, Train MAPE: 0.8505, Train RMSE: 14.6622, Valid Loss: 14.1381, Valid MAPE: 2.3063, Valid RMSE: 18.8406, Training Time: 1393.2570/epoch
+Average Training Time: 1393.2570 secs/epoch
+Average Inference Time: 137.5469 secs
+Training finished
+The valid loss on best model is 14.1381, epoch:9
+Evaluate best model on test data for horizon 1, Test MAE: 7.8481, Test MAPE: 0.4093, Test RMSE: 12.1454
+Average Testing Time: 274.6893 secs
+
+
+Results for 1 runs
+
+
+valid   MAE     RMSE    MAPE
+mean:   14.1603 19.5520 2.2074
+std:    0.0000  0.0000  0.0000
+
+
+Total Training Time: 20898.855 secs
+
+
+———
+
+
+
+
+(benchmark) himanshu@himanshus-MacBook-Air Traffic-Benchmark % python3 ./methods/DGCRN/train.py --adj_data ./data/sensor_graph/adj_mat_hague_S_T1.pkl --data ./data/Hague_S_T1 --num_nodes 9 --runs 1  --epochs 15 --print_every 5 --batch_size 64 --tolerance 2  --cl_decay_steps 4000 --expid DGCRN_hague --device mps:0
+Namespace(runs=1, LOAD_INITIAL=False, TEST_ONLY=False, tolerance=2, OUTPUT_PREDICTION=True, cl_decay_steps=4000.0, new_training_method=False, rnn_size=64, hyperGNN_dim=16, device='mps:0', data='./data/Hague_S_T1', adj_data='./data/sensor_graph/adj_mat_hague_S_T1.pkl', propalpha=0.05, cl=True, gcn_depth=2, num_nodes=9, dropout=0.3, subgraph_size=20, node_dim=40, in_dim=2, seq_in_len=12, seq_out_len=12, layers=3, batch_size=64, tanhalpha=3, learning_rate=0.001, weight_decay=0.0001, clip=5, step_size1=2500, epochs=15, print_every=5, save='./save/', expid='DGCRN_hague', data_name='Hague')
+Number of model parameters is 183601
+start training...
+/opt/homebrew/anaconda3/envs/benchmark/lib/python3.9/site-packages/torch/autograd/__init__.py:200: UserWarning: The operator 'aten::sgn.out' is not currently supported on the MPS backend and will fall back to run on the CPU. This may have performance implications. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/aten/src/ATen/mps/MPSFallback.mm:11.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+Epoch: 006, Inference Time: 129.4277 secs
+Epoch: 006, Train Loss: 14.4849, Train MAPE: 0.6881, Train RMSE: 20.4115, Valid Loss: 17.0203, Valid MAPE: 0.6719, Valid RMSE: 23.2855, Training Time: 1327.8635/epoch
+Average Training Time: 1327.8635 secs/epoch
+Average Inference Time: 129.4277 secs
+Training finished
+The valid loss on best model is 17.0203, epoch:6
+Evaluate best model on test data for horizon 1, Test MAE: 9.9542, Test MAPE: 0.3972, Test RMSE: 14.8568
+Average Testing Time: 280.1040 secs
+
+
+Results for 1 runs
+
+
+valid   MAE     RMSE    MAPE
+mean:   17.1419 25.0295 0.6629
+std:    0.0000  0.0000  0.0000
+
+
+
+Total Training Time: 21838.855 secs
+
+
+———
+
+(benchmark) himanshu@himanshus-MacBook-Air Traffic-Benchmark % python3 ./methods/DGCRN/train.py --adj_data ./data/sensor_graph/adj_mat_hague_S_T2.pkl --data ./data/Hague_S_T2 --num_nodes 15 --runs 1  --epochs 15 --print_every 5 --batch_size 64 --tolerance 1  --cl_decay_steps 4000 --expid DGCRN_hague --device mps:0
+Namespace(runs=1, LOAD_INITIAL=False, TEST_ONLY=False, tolerance=1, OUTPUT_PREDICTION=True, cl_decay_steps=4000.0, new_training_method=False, rnn_size=64, hyperGNN_dim=16, device='mps:0', data='./data/Hague_S_T2', adj_data='./data/sensor_graph/adj_mat_hague_S_T2.pkl', propalpha=0.05, cl=True, gcn_depth=2, num_nodes=15, dropout=0.3, subgraph_size=20, node_dim=40, in_dim=2, seq_in_len=12, seq_out_len=12, layers=3, batch_size=64, tanhalpha=3, learning_rate=0.001, weight_decay=0.0001, clip=5, step_size1=2500, epochs=15, print_every=5, save='./save/', expid='DGCRN_hague', data_name='Hague')
+Number of model parameters is 184081
+start training...
+/opt/homebrew/anaconda3/envs/benchmark/lib/python3.9/site-packages/torch/autograd/__init__.py:200: UserWarning: The operator 'aten::sgn.out' is not currently supported on the MPS backend and will fall back to run on the CPU. This may have performance implications. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/aten/src/ATen/mps/MPSFallback.mm:11.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+Epoch: 006, Inference Time: 142.0585 secs
+Epoch: 006, Train Loss: 12.6115, Train MAPE: 0.9331, Train RMSE: 18.8295, Valid Loss: 36.0900, Valid MAPE: 2.6175, Valid RMSE: 43.0664, Training Time: 1431.4349/epoch
+Average Training Time: 1681.8717 secs/epoch
+Average Inference Time: 162.5759 secs
+Training finished
+The valid loss on best model is 20.7418, epoch:6
+Evaluate best model on test data for horizon 1, Test MAE: 20.5897, Test MAPE: 2.2103, Test RMSE: 27.7099
+Average Testing Time: 310.0430 secs
+
+
+Results for 1 runs
+
+
+valid   MAE     RMSE    MAPE
+mean:   20.9578 28.4575 1.9056
+std:    0.0000  0.0000  0.0000
+
+
+
+Total Training Time: 25228.855 secs
+
+
+
+
+———————
+
+
+PEMS-BAY
+
+
+himanshu@himanshus-macbook-air Traffic-Benchmark % python3 train_benchmark.py --data "PEMS-BAY"
+Traceback (most recent call last):
+  File "/Users/himanshu/Master_Thesis/code/Traffic-Benchmark/train_benchmark.py", line 3, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'
+himanshu@himanshus-macbook-air Traffic-Benchmark % conda activate benchmark
+(benchmark) himanshu@himanshus-macbook-air Traffic-Benchmark % conda activate benchmark
+(benchmark) himanshu@himanshus-macbook-air Traffic-Benchmark % python3 train_benchmark.py --data "PEMS-BAY"
+Namespace(runs=1, LOAD_INITIAL=False, TEST_ONLY=False, tolerance=2, OUTPUT_PREDICTION=True, cl_decay_steps=5500.0, new_training_method=False, rnn_size=96, hyperGNN_dim=16, device='mps:0', data='./data/PEMS-BAY', adj_data='./data/sensor_graph/adj_mx_bay.pkl', propalpha=0.05, cl=True, gcn_depth=2, num_nodes=325, dropout=0.3, subgraph_size=20, node_dim=40, in_dim=2, seq_in_len=12, seq_out_len=12, layers=3, batch_size=64, tanhalpha=3, learning_rate=0.001, weight_decay=0.0001, clip=5, step_size1=2500, epochs=15, print_every=4, save='./save/', expid='DGCRN_pemsbay', data_name='PEMS-BAY')
+Number of model parameters is 408209
+start training...
+/opt/homebrew/anaconda3/envs/benchmark/lib/python3.9/site-packages/torch/autograd/__init__.py:200: UserWarning: The operator 'aten::sgn.out' is not currently supported on the MPS backend and will fall back to run on the CPU. This may have performance implications. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/aten/src/ATen/mps/MPSFallback.mm:11.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+Epoch: 001, Inference Time: 361.8176 secs
+Epoch: 001, Train Loss: 1.0482, Train MAPE: 0.0211, Train RMSE: 1.8702, Valid Loss: 3.7710, Valid MAPE: 0.1094, Valid RMSE: 6.8251, Training Time: 3411.7839/epoch
+Epoch: 004, Inference Time: 361.7244 secs
+Epoch: 004, Train Loss: 0.8546, Train MAPE: 0.0162, Train RMSE: 1.5461, Valid Loss: 3.7498, Valid MAPE: 0.1079, Valid RMSE: 6.8178, Training Time: 3613.7970/epoch
+Epoch: 007, Inference Time: 362.6203 secs
+Epoch: 007, Train Loss: 0.8471, Train MAPE: 0.0160, Train RMSE: 1.5370, Valid Loss: 4.9065, Valid MAPE: 0.0915, Valid RMSE: 7.9812, Training Time: 3912.6025/epoch
+Average Training Time: 3700.0951 secs/epoch
+Average Inference Time: 363.2189 secs
+Training finished
+The valid loss on best model is 3.7498, epoch:4
+Evaluate best model on test data for horizon 1, Test MAE: 0.8734, Test MAPE: 0.0167, Test RMSE: 1.5912
+Average Testing Time: 718.7844 secs
+
+
+Results for 1 runs
+
+
+valid   MAE     RMSE    MAPE
+mean:   3.7425  7.9002  0.1077
+std:    0.0000  0.0000  0.0000
+
+
+
+Total Training Time: 25900.6657 secs
+
